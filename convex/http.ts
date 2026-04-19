@@ -25,7 +25,7 @@ http.route({
       switch (result.type) {
         case "user.created":
           await ctx.runMutation(internal.users.createUser, {
-            tokenIdentifier: `https://local-oman_ramalho-file_drive_storageev|${result.data.id}`,
+            tokenIdentifier: `https://local-oman_ramalho-file_drive_storage|${result.data.id}`,
           });
           break;
         case "organizationMembership.created":
