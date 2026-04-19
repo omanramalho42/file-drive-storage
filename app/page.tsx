@@ -1,11 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { api } from "@/convex/_generated/api"
-import {
-  SignInButton,
-  SignOutButton
-} from "@clerk/nextjs"
 
 import {
   Authenticated,
@@ -13,16 +8,29 @@ import {
   useMutation,
   useQuery
 } from "convex/react"
+import {
+  SignInButton,
+  SignOutButton,
+  useOrganization,
+  useUser
+} from "@clerk/nextjs"
+
+import { Button } from "@/components/ui/button"
+import { createFile } from "@/convex/files"
 
 export default function Home() {
-  const files =
-    useQuery(
-      api.files.getFiles
-    )
-  const createFile =
-    useMutation(
-      api.files.createFile
-    )
+  const organization = useOrganization();
+  const user = useUser();
+
+  let orgId: string | undefined = undefined;
+  if (organization.isLoaded && user.isLoaded) {
+    orgId = organization.organization?.id ?? user.user?.id;
+  }
+  console.log(orgId, "org id")
+  const files = useQuery(
+    api?.files?.getFiles, orgId ? { orgId } : "skip"
+  );
+  const createFile = useMutation(api.files.createFile);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -50,10 +58,11 @@ export default function Home() {
 
       <Button
         onClick={() => {
-          window.alert("create file on convex")
+          if (!orgId) return;
           createFile({
-            name: "Hello world",
-          })
+            name: "hello world",
+            orgId,
+          });
         }}
       >
         Click me 🦇
