@@ -1,6 +1,17 @@
 import { ConvexError, v } from "convex/values"
 import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server"
 import { getUser } from "./users"
+import { fileTypes } from "./schema";
+
+export const getFileUrl = query({
+  args: {
+    fileId: v.id("_storage"),
+  },
+  async handler(ctx, args) {
+    return await ctx.storage.getUrl(args.fileId);
+  },
+});
+
 
 async function hasAccessToOrg(
   ctx: QueryCtx | MutationCtx,
@@ -67,7 +78,8 @@ export const createFile = mutation({
   args: {
     name: v.string(),
     fileId: v.id("_storage"),
-    orgId: v.string()
+    orgId: v.string(),
+    type: fileTypes,
   },
   async handler(ctx, args) {
     const identity =
@@ -93,11 +105,12 @@ export const createFile = mutation({
       throw new ConvexError("You do not have acess to the this organization")
     }
 
-    await ctx.db.insert('files', {
+    await ctx.db.insert("files", {
       name: args.name,
       orgId: args.orgId,
       fileId: args.fileId,
-    })
+      type: args.type,
+    });
   },
 })
 
@@ -119,9 +132,9 @@ export const getFiles = query({
       args.orgId
     )
 
-    // if (!hasAccess) {
-    //   return []
-    // }
+    if (!hasAccess) {
+      return []
+    }
 
     return ctx.db.query(
       "files"

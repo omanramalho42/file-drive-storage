@@ -12,6 +12,7 @@ import { api } from "../../convex/_generated/api";
 
 import { toast } from "sonner";
 
+import { Doc } from "../../convex/_generated/dataModel";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,12 +35,14 @@ import {
 
 import { Loader2 } from "lucide-react";
 
-
 const formSchema = z.object({
   title: z.string().min(1).max(200),
   file: z
-    .instanceof(FileList)
-    .refine((files) => files.length > 0, "Required"),
+    .any()
+    .refine((files) => {
+      if (typeof window === "undefined") return true; // SSR safe
+      return files instanceof FileList && files.length > 0;
+    }, "Required"),
 });
 
 export function UploadButton() {
@@ -73,17 +76,25 @@ export function UploadButton() {
     try {
       const postUrl = await generateUploadUrl();
 
+      const fileType = values.file[0].type;
+    
       const result = await fetch(postUrl, {
         method: "POST",
-        headers: { "Content-Type": values.file[0].type },
+        headers: { "Content-Type": fileType },
         body: values.file[0],
       });
 
       const { storageId } = await result.json();
+      const types = {
+        "image/png": "image",
+        "application/pdf": "pdf",
+        "text/csv": "csv",
+      } as Record<string, Doc<"files">["type"]>;
 
       await createFile({
         name: values.title,
         fileId: storageId,
+        type: types[fileType],
         orgId,
       });
 
