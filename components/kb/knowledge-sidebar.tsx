@@ -151,7 +151,7 @@ export function KnowledgeSidebar() {
         <div className="flex-1 w-full overflow-hidden px-4 pt-4">
           <Tabs defaultValue="folders" className="w-full flex flex-col h-full">
             <TabsList className="grid grid-cols-2">
-              <TabsTrigger value="folders">Folders</TabsTrigger>
+              <TabsTrigger value="folders">Pastas</TabsTrigger>
               <TabsTrigger value="tags">Tags</TabsTrigger>
             </TabsList>
 

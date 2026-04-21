@@ -3,6 +3,17 @@
 import { useState, useEffect } from "react"
 import { Menu } from "lucide-react"
 import { IconSidebar } from "@/components/kb/icon-sidebar"
+import {
+  OrganizationSwitcher,
+  SignInButton,
+  SignOutButton,
+  UserButton,
+} from "@clerk/nextjs"
+import { Button } from "@/components/ui/button"
+import { Authenticated, Unauthenticated } from "convex/react"
+
+import { useTheme } from "next-themes"
+import { Moon, Sun } from "lucide-react"
 
 export default function DashboardLayout({
   children,
@@ -10,6 +21,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [open, setOpen] = useState(false)
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : ""
@@ -49,7 +61,50 @@ export default function DashboardLayout({
         <button onClick={() => setOpen(true)}>
           <Menu />
         </button>
-        <span className="font-semibold">Dashboard</span>
+
+        <div className="container mx-auto flex items-center justify-between px-20 py-4">
+          {/* Ações */}
+          <div className="flex items-center gap-4">
+
+            {/* Switch Theme */}
+            <button
+              onClick={() =>
+                setTheme(theme === "dark" ? "light" : "dark")
+              }
+              className="flex h-9 w-9 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              aria-label="Alternar tema"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </button>
+
+            {/* Clerk */}
+            <div className="flex items-center gap-2">
+              <OrganizationSwitcher />
+              <UserButton />
+            </div>
+
+            {/* Auth */}
+            <Unauthenticated>
+              <SignInButton>
+                <Button>Entrar</Button>
+              </SignInButton>
+            </Unauthenticated>
+
+            <Authenticated>
+              <SignOutButton>
+                <Button variant="outline">Sair</Button>
+              </SignOutButton>
+            </Authenticated>
+          </div>
+        </div>
+        
+        <span className="sm:visible invisible font-semibold">
+          Dashboard
+        </span>
       </div>
 
       {/* MAIN CONTENT */}
