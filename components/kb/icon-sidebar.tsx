@@ -19,28 +19,28 @@ const items = [
     id: "home",
     label: "Início",
     icon: Home,
-    href: "/dashboard/home",
+    href: "/dashboard/",
     // TODO: ainda não possui página própria (ajustar quando existir)
   },
   {
     id: "kb",
     label: "Knowledge Base",
     icon: Database,
-    href: "/dashboard/kb",
+    href: "/dashboard/",
     // TODO: ainda não possui página própria
   },
   {
     id: "transfers",
     label: "Transferências",
     icon: ArrowLeftRight,
-    href: "/dashboard/transfers",
+    href: "/dashboard/",
     // TODO: ainda não possui página própria
   },
   {
     id: "analytics",
     label: "Analytics",
     icon: BarChart3,
-    href: "/dashboard/analytics",
+    href: "/dashboard/",
     // TODO: ainda não possui página própria
   },
 
