@@ -3,9 +3,6 @@
 import { Doc } from "@/convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import {
-  FileText,
-  FileSpreadsheet,
-  Video,
   File,
   Play,
 } from "lucide-react";

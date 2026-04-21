@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { ChevronDown, GridIcon, Loader2, Plus, RowsIcon, Upload as UploadIcon } from "lucide-react"
+import { ChevronDown, FileText, GridIcon, Loader2, Plus, RowsIcon, Upload as UploadIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -24,15 +24,19 @@ import { UploadDialog } from "./upload-dialog"
 import { CreateFolderDialog } from "./create-folder-dialog"
 import { MoveFileDialog } from "./move-file-dialog"
 import { FileKindIcon } from "./file-icon"
-import { useQuery } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useOrganization, useUser } from "@clerk/nextjs"
 import { Label } from "../ui/label"
 import { FileCard } from "../base/file-card"
+import { useRouter } from "next/navigation"
+import { createDoc } from "@/convex/docs"
+import { Id } from "@/convex/_generated/dataModel"
 
 export function MainContent() {
   const { organization } = useOrganization()
   const { user } = useUser()
+  const router  = useRouter()
 
   const orgId = organization?.id ?? user?.id
   // 🔥 DADOS DO CONVEX
@@ -101,7 +105,23 @@ export function MainContent() {
   }, [searchQuery, folders, files])
 
   const isSearching = searchResults !== null
+  // ... dentro do seu componente
+  const createDoc = useMutation(api.docs.createDoc)
 
+  const handleNewDoc = async () => {
+    if (!selectedFolderId || !orgId) return
+
+    // 2. A chamada é assíncrona (await)
+    const docId = await createDoc({
+      title: "Sem título",
+      orgId: orgId,
+      // Cast explícito: o Convex aceita a string se você fizer o cast para Id<"folders">
+      folderId: selectedFolderId as Id<"folders">,
+    })
+
+    // 3. Agora você tem o ID para navegar
+    router.push(`/doc/${docId}`)
+  }
   return (
     <main className="flex flex-col flex-1 min-w-0 overflow-y-auto bg-background">
       {/* Header */}
@@ -151,6 +171,16 @@ export function MainContent() {
           >
             <UploadIcon className="h-4 w-4" />
             Adicionar arquivo
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleNewDoc}
+            disabled={!selectedFolderId}
+            className="gap-1.5"
+          >
+            <FileText className="h-4 w-4" />
+            Documento
           </Button>
         </div>
       </header>
