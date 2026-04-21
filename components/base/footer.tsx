@@ -8,7 +8,7 @@ export function Footer() {
         {/* Marca + Logo */}
         <div className="flex items-center gap-2">
           <Image
-            src="/logo2.png"
+            src="/logo.png"
             alt="Logo FileDrive"
             width={24}
             height={24}

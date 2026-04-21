@@ -10,6 +10,7 @@
 
 import type * as clerk from "../clerk.js";
 import type * as crons from "../crons.js";
+import type * as docs from "../docs.js";
 import type * as files from "../files.js";
 import type * as folders from "../folders.js";
 import type * as http from "../http.js";
@@ -24,6 +25,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   clerk: typeof clerk;
   crons: typeof crons;
+  docs: typeof docs;
   files: typeof files;
   folders: typeof folders;
   http: typeof http;

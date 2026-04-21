@@ -297,6 +297,7 @@ export const getFiles = query({
           type: file.type,
           sizeKb: file.sizeKb ?? 0,
           folderId: file.folderId ?? "general",
+          docId: file.docId,
 
           addedBy: {
             name: user?.name ?? "Unknown",

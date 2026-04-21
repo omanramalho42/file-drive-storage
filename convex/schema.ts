@@ -20,6 +20,7 @@ export default defineSchema({
     orgId: v.string(),
     fileId: v.id("_storage"),
     userId: v.id("users"),
+    docId: v.optional(v.id("docs")),
 
     // ✅ NOVOS CAMPOS (todos opcionais)
     folderId: v.optional(v.string()),
@@ -30,6 +31,17 @@ export default defineSchema({
   })
     .index("by_orgId", ["orgId"])
     .index("by_shouldDelete", ["shouldDelete"]),
+
+  docs: defineTable({
+    title: v.string(),
+    content: v.any(), // Ou v.string() / v.array(v.any()) dependendo do seu editor
+    orgId: v.string(),
+    type: v.optional(v.string()), // Adicionado: para categorizar o doc
+    folderId: v.optional(v.id("folders")),
+    updatedAt: v.string(),
+  })
+    .index("by_orgId", ["orgId"])
+    .index("by_folderId", ["folderId"]),
 
   favorites: defineTable({
     fileId: v.id("files"),
