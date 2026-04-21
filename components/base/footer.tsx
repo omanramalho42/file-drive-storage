@@ -1,24 +1,48 @@
-import Link from "next/link";
+import Link from "next/link"
+import Image from "next/image"
 
 export function Footer() {
   return (
-    <div className="h-40 bg-gray-100 mt-12 flex items-center">
-      <div className="container mx-auto flex justify-between items-center">
-        <div>FileDrive</div>
+    <footer className="border-t border-border bg-background">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        {/* Marca + Logo */}
+        <div className="flex items-center gap-2">
+          <Image
+            src="/logo2.png"
+            alt="Logo FileDrive"
+            width={24}
+            height={24}
+            className="rounded-sm"
+          />
+          <span className="text-sm font-medium text-foreground">
+            FileDrive
+          </span>
+        </div>
 
-        <Link className="text-blue-900 hover:text-blue-500" href="/privacy">
-          Privacy Policy
-        </Link>
-        <Link
-          className="text-blue-900 hover:text-blue-500"
-          href="/terms-of-service"
-        >
-          Terms of Service
-        </Link>
-        <Link className="text-blue-900 hover:text-blue-500" href="/about">
-          About
-        </Link>
+        {/* Links */}
+        <div className="flex items-center gap-6 text-sm">
+          <Link
+            className="text-muted-foreground transition-colors hover:text-foreground"
+            href="/privacidade"
+          >
+            Política de Privacidade
+          </Link>
+
+          <Link
+            className="text-muted-foreground transition-colors hover:text-foreground"
+            href="/termos-de-uso"
+          >
+            Termos de Uso
+          </Link>
+
+          <Link
+            className="text-muted-foreground transition-colors hover:text-foreground"
+            href="/sobre"
+          >
+            Sobre
+          </Link>
+        </div>
       </div>
-    </div>
-  );
+    </footer>
+  )
 }

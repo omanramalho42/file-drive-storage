@@ -90,12 +90,17 @@ export const createFile = mutation({
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
+
+    // novos
+    folderId: v.optional(v.string()),
+    sizeKb: v.optional(v.number()),
   },
+
   async handler(ctx, args) {
-    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId)
 
     if (!hasAccess) {
-      throw new ConvexError("you do not have access to this org");
+      throw new ConvexError("you do not have access to this org")
     }
 
     await ctx.db.insert("files", {
@@ -104,9 +109,14 @@ export const createFile = mutation({
       fileId: args.fileId,
       type: args.type,
       userId: hasAccess.user._id,
-    });
+
+      // novos
+      folderId: args.folderId,
+      sizeKb: args.sizeKb,
+      addedAt: new Date().toISOString(),
+    })
   },
-});
+})
 
 export const toggleFavorite = mutation({
   args: {
@@ -220,7 +230,7 @@ export const restoreFile = mutation({
       shouldDelete: false,
     });
   },
-});
+})
 
 export const getFiles = query({
   args: {
@@ -229,25 +239,29 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
     deletedOnly: v.optional(v.boolean()),
     type: v.optional(fileTypes),
-  },
-  async handler(ctx, args) {
-    const hasAccess = await hasAccessToOrg(ctx, args.orgId);
 
-    if (!hasAccess) {
-      return [];
-    }
+    // ✅ NOVO
+    folderId: v.optional(v.string()),
+  },
+
+  async handler(ctx, args) {
+    const hasAccess = await hasAccessToOrg(ctx, args.orgId)
+    if (!hasAccess) return []
 
     let files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
-      .collect();
+      .collect()
 
-    const query = args.query;
-
-    if (query) {
+    if (args.query) {
       files = files.filter((file) =>
-        file.name.toLowerCase().includes(query.toLowerCase())
-      );
+        file.name.toLowerCase().includes(args.query!.toLowerCase())
+      )
+    }
+
+    // ✅ FILTRO POR PASTA (AGORA FUNCIONA)
+    if (args.folderId) {
+      files = files.filter((file) => file.folderId === args.folderId)
     }
 
     if (args.favorites) {
@@ -256,30 +270,70 @@ export const getFiles = query({
         .withIndex("by_userId_orgId_fileId", (q) =>
           q.eq("userId", hasAccess.user._id).eq("orgId", args.orgId)
         )
-        .collect();
+        .collect()
 
       files = files.filter((file) =>
-        favorites.some((favorite) => favorite.fileId === file._id)
-      );
+        favorites.some((fav) => fav.fileId === file._id)
+      )
     }
 
     if (args.deletedOnly) {
-      files = files.filter((file) => file.shouldDelete);
+      files = files.filter((file) => file.shouldDelete)
     } else {
-      files = files.filter((file) => !file.shouldDelete);
+      files = files.filter((file) => !file.shouldDelete)
     }
 
     if (args.type) {
-      files = files.filter((file) => file.type === args.type);
+      files = files.filter((file) => file.type === args.type)
     }
 
     const filesWithUrl = await Promise.all(
-      files.map(async (file) => ({
-        ...file,
-        url: await ctx.storage.getUrl(file.fileId),
-      }))
-    );
+      files.map(async (file) => {
+        const user = await ctx.db.get(file.userId)
 
-    return filesWithUrl;
+        return {
+          id: file._id,
+          name: file.name,
+          type: file.type,
+          sizeKb: file.sizeKb ?? 0,
+          folderId: file.folderId ?? "general",
+
+          addedBy: {
+            name: user?.name ?? "Unknown",
+            email: "",
+            avatarUrl: user?.image,
+          },
+
+          addedAt:
+            file.addedAt ??
+            new Date(file._creationTime).toISOString(),
+
+          url: await ctx.storage.getUrl(file.fileId),
+
+          isFavorited: false,
+          _creationTime: file._creationTime,
+        }
+      })
+    )
+
+    return filesWithUrl
+  },
+})
+
+export const moveFile = mutation({
+  args: {
+    fileId: v.id("files"),
+    newFolderId: v.optional(v.string()),
+  },
+  async handler(ctx, args) {
+    const access = await hasAccessToFile(ctx, args.fileId);
+
+    if (!access) {
+      throw new ConvexError("no access to file");
+    }
+
+    await ctx.db.patch(args.fileId, {
+      folderId: args.newFolderId,
+    });
   },
 });
