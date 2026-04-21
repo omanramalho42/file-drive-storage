@@ -91,10 +91,19 @@ export function FileCardActions({
           </DropdownMenuItem>
 
           <DropdownMenuItem
-            onClick={() => {
-              toggleFavorite({
-                fileId: file._id,
-              });
+            onClick={(e) => {
+              e.preventDefault(); // Importante para não fechar o menu antes de disparar a ação
+              
+              // O ID que o Convex gera e reconhece é o _id
+              const targetId = file._id; 
+              
+              console.log("ID utilizado para a mutation:", targetId);
+              
+              if (targetId) {
+                toggleFavorite({ fileId: targetId });
+              } else {
+                console.error("Não foi possível encontrar o _id do arquivo.");
+              }
             }}
             className="flex gap-1 items-center cursor-pointer"
           >

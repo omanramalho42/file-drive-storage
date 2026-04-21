@@ -292,7 +292,8 @@ export const getFiles = query({
         const user = await ctx.db.get(file.userId)
 
         return {
-          id: file._id,
+          id: file._id,      // O que você usa no front-end
+          _id: file._id,     // Adicione isso também para o Convex reconhecer na mutation
           name: file.name,
           type: file.type,
           sizeKb: file.sizeKb ?? 0,
