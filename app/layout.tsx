@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   title: "Gerencie seus aqruivos",
   description: "Gerencie seus arquivos da melhor forma",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/logo2.png",
+    apple: "/logo2.png",
   },
 };
 

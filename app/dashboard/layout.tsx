@@ -1,24 +1,49 @@
-import { SideNav } from "@/components/base/side-nav"
-import { Metadata } from "next";
+"use client"
+import { useState } from "react"
 
-export const metadata: Metadata = {
-  title: "Gerencie seus aqruivos",
-  description: "Gerencie seus arquivos da melhor forma",
-  icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
-  },
-};
+import { SideNav } from "@/components/base/side-nav"
+import { Menu } from "lucide-react"
 
 export default function DashboardLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <main className="container mx-auto pt-12">
-      <div className="flex gap-8">
-        <SideNav />
+  const [open, setOpen] = useState(false)
 
-        <div className="w-full">{children}</div>
+  return (
+    <main className="min-h-screen">
+      {/* HEADER MOBILE */}
+      <div className="flex items-center justify-between p-4 border-b md:hidden">
+        <button onClick={() => setOpen(true)}>
+          <Menu />
+        </button>
+
+        <span className="font-bold">Dashboard</span>
+      </div>
+
+      <div className="flex">
+        {/* SIDEBAR DESKTOP */}
+        <div className="hidden md:block w-64 border-r min-h-screen">
+          <SideNav />
+        </div>
+
+        {/* SIDEBAR MOBILE (DRAWER) */}
+        {open && (
+          <div className="fixed inset-0 z-50 flex">
+            {/* overlay */}
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setOpen(false)}
+            />
+
+            {/* sidebar */}
+            <div className="relative w-64 bg-background h-full shadow-lg">
+              <SideNav />
+            </div>
+          </div>
+        )}
+
+        {/* CONTENT */}
+        <div className="flex-1 p-4 md:p-8">{children}</div>
       </div>
     </main>
   )

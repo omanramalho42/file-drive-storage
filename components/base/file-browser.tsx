@@ -84,12 +84,14 @@ export function FileBrowser({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">{title}</h1>
+      <div className="flex flex-col gap-6 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
+
+          <UploadButton />
+        </div>
 
         <SearchBar query={query} setQuery={setQuery} />
-
-        <UploadButton />
       </div>
 
       <Tabs defaultValue="grid">

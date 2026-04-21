@@ -22,9 +22,7 @@ export function SearchBar({
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      query,
-    },
+    defaultValues: { query },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -34,29 +32,28 @@ export function SearchBar({
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="flex min-w-100 gap-2 items-center"
+      className="w-full flex items-center gap-2"
     >
-      <FieldGroup className="flex-1">
-        <Field data-invalid={!!form.formState.errors.query}>
-          <Input
-            placeholder="your file names"
-            {...form.register("query")}
-            aria-invalid={!!form.formState.errors.query}
-          />
-          <FieldError errors={[form.formState.errors.query]} />
-        </Field>
-      </FieldGroup>
+      <div className="relative w-full max-w-md">
+        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
+        <Input
+          placeholder="Buscar arquivos..."
+          className="pl-9 h-10"
+          {...form.register("query")}
+        />
+      </div>
 
       <Button
-        size="sm"
         type="submit"
+        size="sm"
         disabled={form.formState.isSubmitting}
-        className="flex gap-1"
       >
-        {form.formState.isSubmitting && (
+        {form.formState.isSubmitting ? (
           <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          "Buscar"
         )}
-        <SearchIcon /> Search
       </Button>
     </form>
   );
