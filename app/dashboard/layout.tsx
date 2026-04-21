@@ -36,7 +36,7 @@ export default function DashboardLayout({
 
       <aside
         className={`
-          fixed md:hidden z-50 left-0 top-0 h-dvh w-64 bg-background border-r
+          fixed md:hidden z-50 left-0 top-0 h-dvh w-auto bg-background border-r
           transform transition-transform duration-300
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
