@@ -9,6 +9,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/base/header";
 import { Toaster } from "@/components/ui/sonner";
 import { Footer } from "@/components/base/footer";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,26 +30,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      lang="pt-BR"
+      className={`${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-full flex flex-col">
-        <ClerkProvider>
-          <ConvexClientProvider>
-            <Toaster />
-            <Header />
-            {children}
-            <Footer />
-          </ConvexClientProvider>
-        </ClerkProvider>
+      <body className="min-h-dvh flex flex-col bg-background text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ClerkProvider>
+            <ConvexClientProvider>
+              <Toaster />
+              {children}
+            </ConvexClientProvider>
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

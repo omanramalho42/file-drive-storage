@@ -1,50 +1,61 @@
 "use client"
-import { useState } from "react"
 
-import { SideNav } from "@/components/base/side-nav"
+import { useState, useEffect } from "react"
 import { Menu } from "lucide-react"
+import { IconSidebar } from "@/components/kb/icon-sidebar"
 
 export default function DashboardLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode
+}) {
   const [open, setOpen] = useState(false)
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : ""
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [open])
+
   return (
-    <main className="min-h-screen">
-      {/* HEADER MOBILE */}
-      <div className="flex items-center justify-between p-4 border-b md:hidden">
+    <div className="flex h-dvh w-full overflow-hidden bg-background">
+
+      {/* DESKTOP SIDEBAR */}
+      <aside className="hidden md:flex w-14 border-r border-border">
+        <IconSidebar />
+      </aside>
+
+      {/* MOBILE OVERLAY */}
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/40 md:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`
+          fixed md:hidden z-50 left-0 top-0 h-dvh w-64 bg-background border-r
+          transform transition-transform duration-300
+          ${open ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        <IconSidebar />
+      </aside>
+
+      {/* MOBILE TOP BAR */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 border-b bg-background">
         <button onClick={() => setOpen(true)}>
           <Menu />
         </button>
-
-        <span className="font-bold">Dashboard</span>
+        <span className="font-semibold">Dashboard</span>
       </div>
 
-      <div className="flex">
-        {/* SIDEBAR DESKTOP */}
-        <div className="hidden md:block w-64 border-r min-h-screen">
-          <SideNav />
-        </div>
-
-        {/* SIDEBAR MOBILE (DRAWER) */}
-        {open && (
-          <div className="fixed inset-0 z-50 flex">
-            {/* overlay */}
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={() => setOpen(false)}
-            />
-
-            {/* sidebar */}
-            <div className="relative w-64 bg-background h-full shadow-lg">
-              <SideNav />
-            </div>
-          </div>
-        )}
-
-        {/* CONTENT */}
-        <div className="flex-1 p-4 md:p-8">{children}</div>
-      </div>
-    </main>
+      {/* MAIN CONTENT */}
+      <main className="flex-1 min-w-0 overflow-y-auto pt-14 md:pt-0">
+        {children}
+      </main>
+    </div>
   )
 }

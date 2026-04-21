@@ -24,9 +24,10 @@ export function FileCard({
 }: {
   file: Doc<"files"> & { isFavorited: boolean; url: string | null }
 }) {
-  const userProfile = useQuery(api.users.getUserProfile, {
-    userId: file.userId,
-  })
+  const userProfile = useQuery(
+    api.users.getUserProfile,
+    file.userId ? { userId: file.userId } : "skip"
+  )
 
   const typeIcons = {
     image: <ImageIcon />,
@@ -68,3 +69,9 @@ export function FileCard({
     </Card>
   )
 }
+
+// [IA]
+// (código do projeto com store)
+
+// [MEU]
+// (código do seu projeto com convex)

@@ -78,7 +78,7 @@ export function FileBrowser({
     files?.map((file) => ({
       ...file,
       isFavorited: (favorites ?? []).some(
-        (favorite) => favorite.fileId === file._id
+        (favorite) => favorite.fileId === file.id
       ),
     })) ?? [];
 
@@ -114,7 +114,7 @@ export function FileBrowser({
                 setType(newType as any);
               }}
             >
-              <SelectTrigger id="type-select" className="w-[180px]">
+              <SelectTrigger id="type-select" className="w-45">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -137,7 +137,12 @@ export function FileBrowser({
         <TabsContent value="grid">
           <div className="grid grid-cols-3 gap-4">
             {modifiedFiles?.map((file) => {
-              return <FileCard key={file._id} file={file} />;
+              return (
+                <FileCard
+                  key={file.id}
+                  file={file}
+                />
+              );
             })}
           </div>
         </TabsContent>
