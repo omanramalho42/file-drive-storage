@@ -18,6 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react"
+import { FileKindIcon } from "./file-kind-icon"
 
 export function FileCard({
   file,
@@ -37,22 +38,16 @@ export function FileCard({
 
   return (
     <Card>
-      <CardHeader className="relative">
-        <CardTitle className="flex gap-2 text-base font-normal">
-          <div className="flex justify-center">{typeIcons[file.type]}</div>{" "}
+      <CardHeader className="relative pb-2">
+        <CardTitle className="flex gap-2 text-sm font-medium truncate items-center">
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
           <FileCardActions isFavorited={file.isFavorited} file={file} />
         </div>
       </CardHeader>
-      <CardContent className="h-50 flex justify-center items-center">
-        {file.type === "image" && file.url && (
-          <Image alt={file.name} width="200" height="100" src={file.url} />
-        )}
-
-        {file.type === "csv" && <GanttChartIcon className="w-20 h-20" />}
-        {file.type === "pdf" && <FileTextIcon className="w-20 h-20" />}
+      <CardContent className="flex justify-center items-center py-4">
+        <FileKindIcon name={file.name} url={file.url} type={file.type} className="w-full h-32" />
       </CardContent>
       <CardFooter className="flex justify-between">
         <div className="flex gap-2 text-xs text-gray-700 w-40 items-center">
@@ -69,9 +64,3 @@ export function FileCard({
     </Card>
   )
 }
-
-// [IA]
-// (código do projeto com store)
-
-// [MEU]
-// (código do seu projeto com convex)

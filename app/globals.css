@@ -48,6 +48,9 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 :root {
+  --folder-bg-1: #3b82f6; --folder-bg-2: #1d4ed8;
+  --folder-tab-1: #60a5fa; --folder-tab-2: #2563eb;
+  --glass-bg-1: rgba(255, 255, 255, 0.1); --glass-bg-2: rgba(255, 255, 255, 0.05);
   /* LIGHT MODE — mais premium, menos branco puro */
   --background: oklch(0.99 0.005 260);
   --foreground: oklch(0.18 0.02 260);
@@ -202,3 +205,27 @@
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-hover);
 }
+/* Base refinada para os cards */
+.file-preview-image,
+.file-preview-video,
+.file-preview-csv,
+.file-preview-text,
+.file-preview-fallback {
+  width: 140px; /* Aumentado para dar destaque */
+  height: 100px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2), 0 8px 10px -6px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+/* Gradientes específicos para cada tipo */
+.file-preview-image { background: linear-gradient(135deg, #f56c4f 0%, #a33824 100%); }
+.file-preview-video { background: linear-gradient(135deg, #ef4444 0%, #7f1d1d 100%); }
+.file-preview-csv { background: linear-gradient(135deg, #22c55e 0%, #166534 100%); }
+.file-preview-text { background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%); }
+.file-preview-fallback { background: linear-gradient(135deg, #6b7280 0%, #374151 100%); }

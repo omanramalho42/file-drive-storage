@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { ChevronDown, Plus, Upload as UploadIcon } from "lucide-react"
+import { ChevronDown, GridIcon, Loader2, Plus, RowsIcon, Upload as UploadIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -9,6 +9,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { FolderCard } from "./folder-card"
 import { FilesTable } from "./files-table"
 import { EmptyState } from "./empty-state"
@@ -19,6 +27,8 @@ import { FileKindIcon } from "./file-icon"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { useOrganization, useUser } from "@clerk/nextjs"
+import { Label } from "../ui/label"
+import { FileCard } from "../base/file-card"
 
 export function MainContent() {
   const { organization } = useOrganization()
@@ -246,16 +256,78 @@ function FolderView({
         </section>
       )}
 
+      <Tabs defaultValue="grid">
+        <div className="flex justify-between items-center">
+          <TabsList className="mb-2">
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <GridIcon />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2 items-center">
+              <RowsIcon /> Table
+            </TabsTrigger>
+          </TabsList>
+
+          {/* <div className="flex gap-2 items-center">
+            <Label htmlFor="type-select">Type Filter</Label>
+            <Select
+              value={type}
+              onValueChange={(newType) => {
+                setType(newType as any);
+              }}
+            >
+              <SelectTrigger id="type-select" className="w-45">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div> */}
+        </div>
+
+        {/* {isLoading && (
+          <div className="flex flex-col gap-8 w-full items-center mt-24">
+            <Loader2 className="h-32 w-32 animate-spin text-gray-500" />
+            <div className="text-2xl">Loading your files...</div>
+          </div>
+        )} */}
+
+        <TabsContent value="grid">
+          <div className="grid grid-cols-3 gap-4">
+            {files?.map((file) => {
+              return (
+                <FileCard
+                  key={file.id}
+                  file={file}
+                />
+              );
+            })}
+          </div>
+        </TabsContent>
+        <TabsContent value="table">
+          <FilesTable
+            files={files}
+            onMove={onMoveFile}
+          />
+        </TabsContent>
+      </Tabs>
       {/* 📄 FILES */}
-      {files.length > 0 && (
+      {/* {files.length > 0 && (
         <section>
           <h2 className="mb-4 text-2xl font-semibold tracking-tight text-foreground">
             Arquivos
           </h2>
 
-          <FilesTable files={files} onMove={onMoveFile} />
+          <FilesTable
+            files={files}
+            onMove={onMoveFile}
+          />
         </section>
-      )}
+      )} */}
     </div>
   )
 }

@@ -65,7 +65,7 @@ export function FilesTable({ files, onMove }: Props) {
             className="grid grid-cols-[1fr_180px_120px_120px_40px] items-center gap-4 px-5 py-3 text-sm transition-colors hover:bg-secondary/30"
           >
             <div className="flex min-w-0 items-center gap-3">
-              {/* <FileKindIcon kind={file.kind} /> */}
+              <FileKindIcon type={file.kind} />
               <span className="truncate text-foreground">{file.name}</span>
             </div>
 
