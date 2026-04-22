@@ -53,12 +53,17 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          {/* Este botão é o que deve ficar dentro do seu TreeRow */}
-          <button className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-secondary rounded">
+          <button 
+            className="
+              p-1 hover:bg-secondary rounded transition-opacity
+              opacity-0 group-hover:opacity-100   /* Comportamento Desktop */
+              md:opacity-0 md:group-hover:opacity-100 /* Mantém o comportamento original no Desktop */
+              opacity-100                         /* Força visibilidade em Mobile */
+            "
+          >
             <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
           </button>
         </DropdownMenuTrigger>
-        
         <DropdownMenuContent align="end">
           <RenameFolderDialog
             folder={folder}
