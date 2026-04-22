@@ -57,7 +57,7 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
             className="
               p-1 rounded transition-opacity
               opacity-100
-              lg:opacity-0 lg:group-hover:opacity-100
+              xl:opacity-0 xl:group-hover:opacity-100
               hover:bg-secondary
             "
           >
