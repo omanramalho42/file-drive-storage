@@ -53,12 +53,12 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button 
+          <button
             className="
-              p-1 hover:bg-secondary rounded transition-opacity
-              opacity-0 group-hover:opacity-100   /* Comportamento Desktop */
-              md:opacity-0 md:group-hover:opacity-100 /* Mantém o comportamento original no Desktop */
-              opacity-100                         /* Força visibilidade em Mobile */
+              p-1 rounded transition-opacity
+              opacity-100
+              lg:opacity-0 lg:group-hover:opacity-100
+              hover:bg-secondary
             "
           >
             <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
