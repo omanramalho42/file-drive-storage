@@ -198,6 +198,24 @@ function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
   }
 }
 
+export const deleteFiles = mutation({
+  args: { ids: v.array(v.id("files")) },
+  async handler(ctx, args) {
+    for (const id of args.ids) {
+      await ctx.db.delete(id);
+    }
+  },
+});
+
+export const moveFiles = mutation({
+  args: { ids: v.array(v.id("files")), folderId: v.optional(v.id("folders")) },
+  async handler(ctx, args) {
+    for (const id of args.ids) {
+      await ctx.db.patch(id, { folderId: args.folderId });
+    }
+  },
+});
+
 export const deleteFile = mutation({
   args: { fileId: v.id("files") },
   async handler(ctx, args) {
