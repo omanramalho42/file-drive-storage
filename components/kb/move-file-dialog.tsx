@@ -1,5 +1,15 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { useMutation, useQuery } from "convex/react"
+import { useOrganization, useUser } from "@clerk/nextjs"
+import { ArrowLeftRight, Move } from "lucide-react" // Certifique-se de importar o ícone padrão
+import { toast } from "sonner"
+import { ReactNode } from "react" // Importação necessária
+
+import { api } from "@/convex/_generated/api"
+import { Id, Doc } from "@/convex/_generated/dataModel"
+
 import {
   Dialog,
   DialogContent,
@@ -7,8 +17,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger, // Necessário importar
 } from "@/components/ui/dialog"
-
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import {
@@ -19,75 +29,65 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { useState, useEffect } from "react"
-import { ArrowLeftRight } from "lucide-react"
-
-import { useMutation, useQuery } from "convex/react"
-import { api } from "@/convex/_generated/api"
-
-import { useOrganization, useUser } from "@clerk/nextjs"
-
 interface Props {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  fileId: string | null
+  file: Doc<"files"> // Recebendo o objeto arquivo completo
+  trigger?: ReactNode // Agora opcional
 }
 
-export function MoveFileDialog({ open, onOpenChange, fileId }: Props) {
+export function MoveFileDialog({ file, trigger }: Props) {
+  const [isOpen, setIsOpen] = useState(false)
   const moveFile = useMutation(api.files.moveFile)
 
-  // ✅ PEGAR ORG ID CORRETAMENTE
   const { organization, isLoaded: orgLoaded } = useOrganization()
   const { user, isLoaded: userLoaded } = useUser()
 
   let orgId: string | undefined = undefined
-
   if (orgLoaded && userLoaded) {
     orgId = organization?.id ?? user?.id
   }
 
-  // ✅ Query segura (evita erro quando orgId ainda não carregou)
-  const folders =
-    useQuery(api.folders.getFolders, orgId ? { orgId } : "skip") || []
-
+  const folders = useQuery(api.folders.getFolders, orgId ? { orgId } : "skip") || []
   const [target, setTarget] = useState<string>("")
 
   useEffect(() => {
-    if (open) setTarget("")
-  }, [open])
-
-  if (!fileId) return null
+    if (isOpen) setTarget("")
+  }, [isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!target) return
 
-    if (!target) {
-      onOpenChange(false)
-      return
+    try {
+      await moveFile({ 
+        fileId: file._id as Id<"files">, 
+        folderId: target as Id<"folders"> 
+      })
+      toast.success("Arquivo movido com sucesso!")
+      setIsOpen(false)
+    } catch (error) {
+      toast.error("Erro ao mover arquivo")
     }
-
-    await moveFile({
-      fileId: fileId as any,
-      newFolderId: target,
-    })
-
-    onOpenChange(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {/* Aqui a lógica para usar o trigger passado ou o padrão */}
+      <DialogTrigger asChild>
+        {trigger || (
+          <Button variant="outline" size="sm" className="gap-2">
+            <Move className="w-4 h-4" /> Mover
+          </Button>
+        )}
+      </DialogTrigger>
+
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent">
             <ArrowLeftRight className="h-6 w-6" />
           </div>
-
-          <DialogTitle className="text-center text-lg">
-            Mover arquivo
-          </DialogTitle>
-
+          <DialogTitle className="text-center text-lg">Mover arquivo</DialogTitle>
           <DialogDescription className="text-center text-sm text-muted-foreground">
-            Escolha a pasta de destino
+            Escolha a pasta de destino para <strong>{file?.name}</strong>
           </DialogDescription>
         </DialogHeader>
 
@@ -96,12 +96,10 @@ export function MoveFileDialog({ open, onOpenChange, fileId }: Props) {
             <Label className="text-xs text-muted-foreground">
               Pasta de destino
             </Label>
-
             <Select value={target} onValueChange={setTarget}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione uma pasta" />
               </SelectTrigger>
-
               <SelectContent>
                 {folders.map((f: any) => (
                   <SelectItem key={f._id} value={f._id}>
@@ -113,17 +111,10 @@ export function MoveFileDialog({ open, onOpenChange, fileId }: Props) {
           </div>
 
           <DialogFooter className="gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="ghost" onClick={() => setIsOpen(false)}>
               Cancelar
             </Button>
-
-            <Button type="submit">
-              Mover
-            </Button>
+            <Button type="submit">Mover</Button>
           </DialogFooter>
         </form>
       </DialogContent>

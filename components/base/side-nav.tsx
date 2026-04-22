@@ -18,7 +18,7 @@ export function SideNav() {
             "text-blue-500": pathname.includes("/dashboard/files"),
           })}
         >
-          <FileIcon /> All Files
+          <FileIcon /> Todos os arquivos
         </Button>
       </Link>
 
@@ -29,7 +29,7 @@ export function SideNav() {
             "text-blue-500": pathname.includes("/dashboard/favorites"),
           })}
         >
-          <StarIcon /> Favorites
+          <StarIcon /> Favoritos
         </Button>
       </Link>
     </div>

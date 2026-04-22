@@ -1,9 +1,7 @@
-import Image from "next/image"
-
 import { formatRelative } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 import { Doc } from "@/convex/_generated/dataModel"
-import { ReactNode } from "react"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { FileCardActions } from "@/components/base/file-actions"
@@ -17,7 +15,6 @@ import {
 } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-import { FileTextIcon, GanttChartIcon, ImageIcon } from "lucide-react"
 import { FileKindIcon } from "./file-kind-icon"
 
 export function FileCard({
@@ -29,13 +26,6 @@ export function FileCard({
     api.users.getUserProfile,
     file.userId ? { userId: file.userId } : "skip"
   )
-
-  const typeIcons = {
-    image: <ImageIcon />,
-    pdf: <FileTextIcon />,
-    csv: <GanttChartIcon />,
-  } as Record<Doc<"files">["type"], ReactNode>
-
   return (
     <Card>
       <CardHeader className="relative pb-2">
@@ -43,7 +33,10 @@ export function FileCard({
           {file.name}
         </CardTitle>
         <div className="absolute top-2 right-2">
-          <FileCardActions isFavorited={file.isFavorited} file={file} />
+          <FileCardActions
+            isFavorited={file.isFavorited}
+            file={file}
+          />
         </div>
       </CardHeader>
       <CardContent className="flex justify-center items-center py-4">
@@ -58,7 +51,9 @@ export function FileCard({
           {userProfile?.name}
         </div>
         <div className="text-xs text-gray-700">
-          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+          Carregado {formatRelative(new Date(file._creationTime), new Date(), {
+            locale: ptBR,
+          })}
         </div>
       </CardFooter>
     </Card>

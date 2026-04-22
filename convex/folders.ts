@@ -39,3 +39,29 @@ export const createFolder = mutation({
     })
   },
 })
+
+export const deleteFolder = mutation({
+  args: { folderId: v.id("folders") },
+  async handler(ctx, args) {
+    // Adicione lógica de acesso aqui (similar ao hasAccessToFile)
+    await ctx.db.delete(args.folderId);
+  },
+});
+
+export const renameFolder = mutation({
+  args: { folderId: v.id("folders"), name: v.string() },
+  async handler(ctx, args) {
+    await ctx.db.patch(args.folderId, { name: args.name });
+  },
+});
+
+export const moveFolder = mutation({
+  args: { 
+    folderId: v.id("folders"), 
+    parentId: v.optional(v.id("folders")) // Opcional para mover para a raiz
+  },
+  async handler(ctx, args) {
+    // Adicione aqui sua lógica de segurança para verificar acesso
+    await ctx.db.patch(args.folderId, { parentId: args.parentId });
+  },
+});

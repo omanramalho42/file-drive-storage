@@ -45,7 +45,7 @@ export const columns: ColumnDef<
     },
   },
   {
-    header: "Uploaded On",
+    header: "Carregado em",
     cell: ({ row }) => {
       return (
         <div>

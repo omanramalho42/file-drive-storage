@@ -213,7 +213,29 @@ export const deleteFile = mutation({
       shouldDelete: true,
     });
   },
-});
+})
+
+export const renameFile = mutation({
+  args: {
+    fileId: v.id("files"),
+    newName: v.string(),
+  },
+  async handler(ctx, args) {
+    const access = await hasAccessToFile(ctx, args.fileId);
+
+    if (!access) {
+      throw new ConvexError("you do not have access to this file");
+    }
+
+    if (access.file.userId !== access.user._id) {
+      throw new ConvexError("you do not have permission to rename this file");
+    }
+
+    await ctx.db.patch(access.file._id, {
+      name: args.newName,
+    });
+  },
+})
 
 export const restoreFile = mutation({
   args: { fileId: v.id("files") },
@@ -323,19 +345,14 @@ export const getFiles = query({
 })
 
 export const moveFile = mutation({
-  args: {
-    fileId: v.id("files"),
-    newFolderId: v.optional(v.string()),
+  args: { 
+    fileId: v.id("files"), 
+    folderId: v.optional(v.id("folders")) 
   },
   async handler(ctx, args) {
     const access = await hasAccessToFile(ctx, args.fileId);
+    if (!access) throw new ConvexError("No access");
 
-    if (!access) {
-      throw new ConvexError("no access to file");
-    }
-
-    await ctx.db.patch(args.fileId, {
-      folderId: args.newFolderId,
-    });
+    await ctx.db.patch(args.fileId, { folderId: args.folderId });
   },
 });

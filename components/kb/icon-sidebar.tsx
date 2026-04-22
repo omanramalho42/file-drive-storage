@@ -22,38 +22,37 @@ const items = [
     href: "/dashboard/",
     // TODO: ainda não possui página própria (ajustar quando existir)
   },
-  {
-    id: "kb",
-    label: "Knowledge Base",
-    icon: Database,
-    href: "/dashboard/",
-    // TODO: ainda não possui página própria
-  },
-  {
-    id: "transfers",
-    label: "Transferências",
-    icon: ArrowLeftRight,
-    href: "/dashboard/",
-    // TODO: ainda não possui página própria
-  },
-  {
-    id: "analytics",
-    label: "Analytics",
-    icon: BarChart3,
-    href: "/dashboard/",
-    // TODO: ainda não possui página própria
-  },
-
+  // {
+  //   id: "kb",
+  //   label: "Knowledge Base",
+  //   icon: Database,
+  //   href: "/dashboard/",
+  //   // TODO: ainda não possui página própria
+  // },
+  // {
+  //   id: "transfers",
+  //   label: "Transferências",
+  //   icon: ArrowLeftRight,
+  //   href: "/dashboard/",
+  //   // TODO: ainda não possui página própria
+  // },
+  // {
+  //   id: "analytics",
+  //   label: "Analytics",
+  //   icon: BarChart3,
+  //   href: "/dashboard/",
+  //   // TODO: ainda não possui página própria
+  // },
   // Rotas vindas do SideNav
   {
     id: "files",
-    label: "All Files",
+    label: "Todos arquivos",
     icon: FileIcon,
     href: "/dashboard/files",
   },
   {
     id: "favorites",
-    label: "Favorites",
+    label: "Favoritos",
     icon: StarIcon,
     href: "/dashboard/favorites",
   },
@@ -70,13 +69,18 @@ export function IconSidebar() {
       <div className="flex flex-col items-center gap-1">
         {/* Logo */}
         <div className="mb-4 flex h-9 w-9 items-center justify-center">
-          <div
+          {/* <div
             className="h-7 w-7 rounded-md bg-linear-to-br from-zinc-200 to-zinc-400 shadow-md"
             aria-label="Logo"
             style={{
               clipPath:
                 "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
             }}
+          /> */}
+          <img
+            src="/logo.png"
+            alt="logo"
+            className="w-24 h-24 rounded-full object-contain"
           />
         </div>
 
@@ -107,6 +111,7 @@ export function IconSidebar() {
       {/* Configurações (sem rota definida ainda) */}
       <button
         type="button"
+        disabled
         aria-label="Configurações"
         className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
         // TODO: criar rota /dashboard/settings
