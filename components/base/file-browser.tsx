@@ -107,7 +107,7 @@ export function FileBrowser({
           </TabsList>
 
           <div className="flex gap-2 items-center">
-            <Label htmlFor="type-select">Type Filter</Label>
+            <Label htmlFor="type-select">Tipo do filtro</Label>
             <Select
               value={type}
               onValueChange={(newType) => {
@@ -118,8 +118,8 @@ export function FileBrowser({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="image">Imagem</SelectItem>
                 <SelectItem value="csv">CSV</SelectItem>
                 <SelectItem value="pdf">PDF</SelectItem>
               </SelectContent>
@@ -130,7 +130,7 @@ export function FileBrowser({
         {isLoading && (
           <div className="flex flex-col gap-8 w-full items-center mt-24">
             <Loader2 className="h-32 w-32 animate-spin text-gray-500" />
-            <div className="text-2xl">Loading your files...</div>
+            <div className="text-2xl">Carregando seus arquivos...</div>
           </div>
         )}
 

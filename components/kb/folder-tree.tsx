@@ -3,6 +3,8 @@
 import { Folder as FolderIcon, FolderOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMemo, useState } from "react"
+import { FolderActions } from "../base/folder-actions"
+// Adicione o import no topo
 
 interface FolderTreeProps {
   folders: any[]
@@ -52,39 +54,43 @@ function TreeRow({
   const hasChildren = node.children.length > 0
 
   return (
-    <div>
-      <button
-        type="button"
-        onClick={() => {
-          onSelect(node.folder.id)
-          if (hasChildren) onToggle(node.folder.id)
-        }}
-        aria-expanded={hasChildren ? isExpanded : undefined}
-        className={cn(
-          "group flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
-          isSelected ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground",
-        )}
-        style={{ paddingLeft: `${depth * 16 + 8}px` }}
-      >
-        {/* tree connector */}
-        {depth > 0 && (
-          <span aria-hidden="true" className="-ml-3 mr-1 inline-block h-3 w-3 border-l border-b border-border/70 rounded-bl-md" />
-        )}
-        {isSelected && hasChildren ? (
-          <FolderOpen className="h-4 w-4 shrink-0 text-foreground" />
-        ) : (
-          <FolderIcon className="h-4 w-4 shrink-0" />
-        )}
-        <span className="flex-1 truncate">{node.folder.name}</span>
-        <span
+<div>
+      {/* Adicionamos a classe 'group' no wrapper para controlar o hover das ações */}
+      <div className="group flex w-full items-center gap-1">
+        <button
+          type="button"
+          onClick={() => {
+            onSelect(node.folder.id);
+            if (hasChildren) onToggle(node.folder.id);
+          }}
           className={cn(
-            "ml-auto rounded-md px-1.5 py-0.5 text-[11px] font-medium",
-            isSelected ? "bg-background/60 text-foreground" : "text-muted-foreground",
+            "flex flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
+            isSelected ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
           )}
+          style={{ paddingLeft: `${depth * 16 + 8}px` }}
         >
-          {fileCounts[node.folder.id] ?? 0}
-        </span>
-      </button>
+          {depth > 0 && (
+            <span aria-hidden="true" className="-ml-3 mr-1 inline-block h-3 w-3 border-l border-b border-border/70 rounded-bl-md" />
+          )}
+          {isSelected && hasChildren ? (
+            <FolderOpen className="h-4 w-4 shrink-0 text-foreground" />
+          ) : (
+            <FolderIcon className="h-4 w-4 shrink-0" />
+          )}
+          <span className="flex-1 truncate">{node.folder.name}</span>
+          <span
+            className={cn(
+              "rounded-md px-1.5 py-0.5 text-[11px] font-medium",
+              isSelected ? "bg-background/60 text-foreground" : "text-muted-foreground",
+            )}
+          >
+            {fileCounts[node.folder.id] ?? 0}
+          </span>
+        </button>
+
+        {/* Aqui entra o componente de Ações que criamos */}
+        <FolderActions folder={node.folder} />
+      </div>
       {hasChildren && isExpanded && (
         <div className="mt-0.5">
           {node.children.map((child) => (

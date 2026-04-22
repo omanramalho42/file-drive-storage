@@ -153,7 +153,7 @@ export function MainContent() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-start">
           <Button
             variant="secondary"
             size="sm"
@@ -223,11 +223,6 @@ export function MainContent() {
         />
       )}
       <CreateFolderDialog open={createOpen} onOpenChange={setCreateOpen} />
-      <MoveFileDialog
-        open={moveFileId !== null}
-        onOpenChange={(o) => !o && setMoveFileId(null)}
-        fileId={moveFileId}
-      />
     </main>
   )
 }
@@ -291,10 +286,10 @@ function FolderView({
           <TabsList className="mb-2">
             <TabsTrigger value="grid" className="flex gap-2 items-center">
               <GridIcon />
-              Grid
+              Items
             </TabsTrigger>
             <TabsTrigger value="table" className="flex gap-2 items-center">
-              <RowsIcon /> Table
+              <RowsIcon /> Tabela
             </TabsTrigger>
           </TabsList>
 
