@@ -66,30 +66,14 @@ export function UploadDialog({ open, onOpenChange, folderId }: Props) {
 
   const uploadFile = async (q: QueuedFile) => {
     try {
-      // 1️⃣ gerar URL
       const url = await generateUploadUrl()
-
-      // 2️⃣ upload real
       const result = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": q.file.type },
         body: q.file,
       })
-
       const { storageId } = await result.json()
-      
-      // nao possuo foulder_Id
-      console.log(
-        q.file.name,
-        storageId,
-        orgId,
-        detectType(q.file),
-        folderId, 
-        Math.round(q.file.size | 1024),
-        "ALL DATA INFO BEFORE SUBMITTING"
-      )
 
-      // 3️⃣ salvar no banco
       await createFile({
         name: q.file.name,
         fileId: storageId,
@@ -99,37 +83,30 @@ export function UploadDialog({ open, onOpenChange, folderId }: Props) {
         sizeKb: Math.round(q.file.size / 1024),
       })
 
-      // 4️⃣ atualizar UI
       setQueue((prev) =>
         prev.map((item) =>
           item.id === q.id ? { ...item, progress: 100, done: true } : item
         )
       )
     } catch (err) {
-      console.error(err)
+      console.error("Erro no upload:", err)
     }
   }
-
-  useEffect(() => {
-    queue.forEach((q) => {
-      if (!q.done && q.progress === 0) {
-        uploadFile(q)
-      }
-    })
-  }, [queue])
-
-  const addFiles = (files: FileList | File[]) => {
+  
+  const addFiles = async (files: FileList | File[]) => {
     const arr = Array.from(files)
-
-    setQueue((prev) => [
-      ...prev,
-      ...arr.map((file) => ({
-        id: `${file.name}-${Date.now()}`,
+    
+    for (const file of arr) {
+      const q: QueuedFile = {
+        id: `${file.name}-${Date.now()}-${Math.random()}`,
         file,
         progress: 0,
         done: false,
-      })),
-    ])
+      }
+      
+      setQueue((prev) => [...prev, q])
+      uploadFile(q) 
+    }
   }
 
   const allDone = queue.length > 0 && queue.every((q) => q.done)

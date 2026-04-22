@@ -30,7 +30,7 @@ function Placeholder() {
         height="300"
         src="/empty.svg"
       />
-      <div className="text-2xl">You have no files, upload one now</div>
+      <div className="text-2xl">Você não tem arquivos, faça o upload de um agora.</div>
       <UploadButton />
     </div>
   );
@@ -99,10 +99,10 @@ export function FileBrowser({
           <TabsList className="mb-2">
             <TabsTrigger value="grid" className="flex gap-2 items-center">
               <GridIcon />
-              Grid
+              items
             </TabsTrigger>
             <TabsTrigger value="table" className="flex gap-2 items-center">
-              <RowsIcon /> Table
+              <RowsIcon /> Tabela
             </TabsTrigger>
           </TabsList>
 
