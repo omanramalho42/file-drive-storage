@@ -55,13 +55,15 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
         <DropdownMenuTrigger asChild>
           <button
             className="
-              p-1 rounded transition-opacity
-              opacity-100
-              xl:opacity-0 xl:group-hover:opacity-100
-              hover:bg-secondary
+              p-1 
+              rounded 
+              transition-colors 
+              hover:bg-secondary 
+              text-muted-foreground 
+              hover:text-foreground
             "
           >
-            <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+            <MoreHorizontal className="h-4 w-4" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
