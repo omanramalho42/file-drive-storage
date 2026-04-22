@@ -117,16 +117,16 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>Upload File</Button>
+        <Button>Carregar arquivo</Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-8">
-            Upload your File Here
+            Envie seu arquivo aqui
           </DialogTitle>
           <DialogDescription>
-            This file will be accessible by anyone in your organization
+            Este arquivo estará acessível a qualquer pessoa em sua organização.
           </DialogDescription>
         </DialogHeader>
 
@@ -168,7 +168,7 @@ export function UploadButton() {
             {isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin" />
             )}
-            Submit
+              Enviar
           </Button>
         </form>
       </DialogContent>

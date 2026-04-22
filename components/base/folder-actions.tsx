@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
-import { toast } from "sonner";
+import { useState } from "react"
+import { useMutation } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { Doc } from "@/convex/_generated/dataModel"
+import { toast } from "sonner"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Edit2Icon, TrashIcon, MoveIcon } from "lucide-react";
-import { RenameFolderDialog } from "@/components/base/rename-folder-dialog";
+} from "@/components/ui/dropdown-menu"
+import { MoreHorizontal, Edit2Icon, TrashIcon, MoveIcon } from "lucide-react"
+import { RenameFolderDialog } from "@/components/base/rename-folder-dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,12 +22,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { MoveFolderDialog } from "../kb/move-folder-dialog";
+} from "@/components/ui/alert-dialog"
+import { MoveFolderDialog } from "../kb/move-folder-dialog"
 
 export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const deleteFolder = useMutation(api.folders.deleteFolder);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const deleteFolder = useMutation(api.folders.deleteFolder)
 
   return (
     <>
@@ -41,8 +41,8 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
             <AlertDialogAction
               className="bg-red-600 hover:bg-red-700"
               onClick={async () => {
-                await deleteFolder({ folderId: folder.id });
-                toast.success("Pasta excluída com sucesso!");
+                await deleteFolder({ folderId: folder.id })
+                toast.success("Pasta excluída com sucesso!")
               }}
             >
               Excluir
@@ -94,5 +94,5 @@ export function FolderActions({ folder }: { folder: Doc<"folders"> }) {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

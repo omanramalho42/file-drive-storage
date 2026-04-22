@@ -3,6 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Doc, Id } from "@/convex/_generated/dataModel"
 import { formatRelative } from "date-fns"
+import { ptBR } from "date-fns/locale"
+
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -32,11 +34,11 @@ export const columns: ColumnDef<
 >[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: "Nome",
   },
   {
     accessorKey: "type",
-    header: "Type",
+    header: "Tipo",
   },
   {
     header: "User",
@@ -49,13 +51,15 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <div>
-          {formatRelative(new Date(row.original._creationTime), new Date())}
+          {formatRelative(new Date(row.original._creationTime), new Date(), {
+            locale: ptBR,
+          })}
         </div>
       );
     },
   },
   {
-    header: "Actions",
+    header: "Ações",
     cell: ({ row }) => {
       return (
         <div>

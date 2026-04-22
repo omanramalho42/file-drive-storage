@@ -78,10 +78,10 @@ export function FilesTable({ files, onMove }: Props) {
       {/* Header Responsivo */}
       <div className="grid grid-cols-[40px_1fr_auto] md:grid-cols-[40px_1fr_180px_120px_120px_40px] gap-4 px-5 py-3 text-xs font-medium text-muted-foreground items-center">
         <Checkbox checked={isAllSelected} onCheckedChange={toggleAll} />
-        <div>Name</div>
-        <div className="hidden md:block">Added By</div>
-        <div className="hidden md:block">Size</div>
-        <div className="hidden md:block">Date</div>
+        <div>Nome</div>
+        <div className="hidden md:block">Adicionado por</div>
+        <div className="hidden md:block">Tamanho</div>
+        <div className="hidden md:block">Data</div>
         <div />
       </div>
 
@@ -97,12 +97,22 @@ export function FilesTable({ files, onMove }: Props) {
             </div>
 
             <div className="hidden md:flex items-center gap-2 min-w-0">
-              <Avatar className="h-6 w-6"><AvatarFallback className="bg-secondary text-[10px]">{initials(file.addedBy.name)}</AvatarFallback></Avatar>
-              <span className="truncate text-muted-foreground">{file.addedBy.email}</span>
+              <Avatar className="h-6 w-6">
+                <AvatarFallback className="bg-secondary text-[10px]">
+                  {initials(file.addedBy.name)}
+                </AvatarFallback>
+              </Avatar>
+              <span className="truncate text-muted-foreground">
+                {file.addedBy.email}
+              </span>
             </div>
 
-            <div className="hidden md:block text-muted-foreground">{formatSize(file.sizeKb)}</div>
-            <div className="hidden md:block text-muted-foreground">{formatDate(file.addedAt)}</div>
+            <div className="hidden md:block text-muted-foreground">
+              {formatSize(file.sizeKb)}
+            </div>
+            <div className="hidden md:block text-muted-foreground">
+              {formatDate(file.addedAt)}
+            </div>
 
             <div className="flex justify-end">
               <DropdownMenu>
